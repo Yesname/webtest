@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Sure?</title>
+		<style type="text/css">
+
+			body, html {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				font-size: 18px;
+				font-family: 'PT Sans', sans-serif;
+				transition: background .2s ease;
+			}
+
+			.wrap {
+				position: relative;
+				font-size: 4rem;
+				margin: 4rem 0 0 4rem;
+				max-width: 50%
+			}
+
+			.wrap button {
+				background: #fedc32;
+				border: none;
+				height: 3rem;
+				padding: 0 1.5rem;
+				font-size: 1rem;
+				outline: none;
+				font-weight: 600;
+				transition: background .2s ease;
+				border-radius: 50vh;
+			}
+
+			.wrap button:hover {
+				background: #ffcd30;
+				cursor: pointer;
+			}
+
+			.wrap button.final {
+				background: #f14;
+				color: #fff;
+			}
+
+			.wrap button.timer {
+				background: #fedc32 url('data:image/gif;base64,R0lGODlhAQABAIAAACf+hwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==') 0 0 no-repeat;
+				background-size: 0% 100%;
+			}
+
+			.wrap button.running {
+				background-size: 100% 100%;
+				transition: background 1s ease;
+			}
+
+			.black {
+				background: black;
+				color: white;
+			}
+
+		</style>
+	</head>
+
+	<body>
+
+		<div class="wrap">
+			<p class="painted">Что-то произойдёт, если&nbsp;ты сумеешь нажать&nbsp;на&nbsp;кнопку.</p>
+			<button class="sure">Подтвердить кликом</button>
+			<button class="timer">Проверить временем</button>
+		</div>
+		
+		<script type="text/javascript">
+
+			var buttons = document.getElementsByClassName('sure');
+			var timeButtons = document.getElementsByClassName('timer');
+			var pe = document.getElementsByClassName('painted')[0];
+
+			function paint() {
+				// pe.style.color = 'rgb('+Math.floor(Math.random() * 200)+', '+Math.floor(Math.random() * 200)+', '+Math.floor(Math.random() * 200)+')';
+				document.body.classList.toggle('black');
+			}
+
+			for (let i = 0; i < buttons.length; i++){
+
+				buttons[i].defaultLabel = buttons[i].innerHTML;
+				buttons[i].style.width = (buttons[i].clientWidth + 1) + 'px';
+
+				buttons[i].addEventListener('click',function(){
+					if (this.classList.contains('final')){
+						paint();
+						this.classList.remove('final');
+						this.innerHTML = this.defaultLabel;
+					} else {
+						this.classList.add('final');
+						this.innerHTML = 'Точно?';
+					}
+				});
+
+				buttons[i].addEventListener('mouseout', function(){
+					this.classList.remove('final');
+					this.innerHTML = this.defaultLabel || 'КНОПКА';
+				})
+
+			}
+
+			for (let i = 0; i < timeButtons.length; i++){
+
+				let b = timeButtons[i];
+
+				b.addEventListener('mousedown', function(){
+					b.timeout = setTimeout(paint, 1000);
+					b.timeout2 = setTimeout(function(){
+						b.classList.remove('running');
+					}, 1000)
+					b.classList.add('running');
+				})
+
+				b.addEventListener('mouseup', function(){
+					clearTimeout(b.timeout);
+					clearTimeout(b.timeout2);
+					b.classList.remove('running');
+				});
+
+				b.addEventListener('mouseout', function(){
+					clearTimeout(b.timeout);
+					clearTimeout(b.timeout2);
+					b.classList.remove('running');
+				})
+
+			}
+		
+		</script>
+	</body>
+</html>
